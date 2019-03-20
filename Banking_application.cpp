@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <string>
+#include <time.h>
 using namespace std;
 
 class Accounts{
@@ -9,8 +10,10 @@ class Accounts{
     char first_name[10],last_name[15],type[10];
     char middle_initial;
 
+
     public:
         void open_account(){
+            srand(time(0));
             id = rand();
             cout << "Account Number: " << id << endl;
             cout << "Enter Customers First Name: " << endl;
@@ -37,6 +40,13 @@ class Accounts{
             customer.close();
         }
         void closing_account(){
+
+            auto filename = std::to_string(id);
+            cout << "Enter account number: " << endl;
+            cin >> filename;
+            ofstream customer;
+            customer.open(filename.c_str(),ios_base::app);
+            customer << "Transaction: Closing";
         }
         void list_accounts(){
         }
@@ -90,14 +100,16 @@ int main()
         switch(option)
         {
             case 1:
-                Accounts accountsObject;
-                accountsObject.open_account();
                 break;
             case 2:
                 break;
             case 3:
+                Accounts openingObject;
+                openingObject.open_account();
                 break;
             case 4:
+                Accounts closingObject;
+                closingObject.closing_account();
                 break;
             case 5:
                 break;
@@ -117,4 +129,3 @@ int main()
     }while(option!=9);
     return 0;
 }
-
