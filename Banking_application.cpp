@@ -78,7 +78,7 @@ int main()
 		cout<<"\n\n\t01. Open Branch";
 		cout<<"\n\n\t02. Close Branch";
 		cout<<"\n\n\t03. Open Account";
-		cout<<"\n\n\t04. Open Account";
+		cout<<"\n\n\t04. Close Account";
 		cout<<"\n\n\t05. Process Transaction";
 		cout<<"\n\n\t06. Get Account Balance";
 		cout<<"\n\n\t07. View All Accounts";
