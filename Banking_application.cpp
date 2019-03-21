@@ -6,8 +6,8 @@
 using namespace std;
 
 class Accounts{
-    int id,currency_code;
-    char first_name[10],last_name[15],type[10];
+    int id,currency_code, balance;
+    char first_name[10],last_name[15],type;
     char middle_initial;
 
 
@@ -17,27 +17,42 @@ class Accounts{
             id = rand();
             cout << "Account Number: " << id << endl;
             cout << "Enter Customers First Name: " << endl;
-            cin >> first_name;
+            cin.ignore();
+            cin.getline(first_name,10);
             cout << "Enter Customers Middle Initial: " << endl;
             cin >> middle_initial;
             cout << "Enter Customers Last Name: " << endl;
-            cin >> last_name;
+            cin.ignore();
+            cin.getline(last_name,15);
             cout << "Enter Currency Code: " << endl;
             cin >> currency_code;
-            cout << "Enter Account Type: " << endl;
+            cout << "Enter the account type (Chequing/Savings): " << endl;
             cin >> type;
+            type=toupper(type);
+            cout << "Enter starting balance: " << endl;
+            cin >> balance;
+            cout << "New Account created!!!" << endl;
+            cout << "Press Enter to return back to the main menu: " << endl;
 
+            string filename = std::to_string(id);
 
-            auto filename = std::to_string(id);
             ofstream customer;
-            customer.open(filename.c_str());
-            customer << id << endl;
-            customer << first_name << endl;
-            customer << middle_initial << endl;
-            customer << last_name << endl;
-            customer << currency_code << endl;
-            customer << type << endl;
+            string abs_file_path = "C:\\banking_app\\Transaction\\" + filename + ".txt";
+            customer.open(abs_file_path);
+            customer << "Opening Balance: " << balance << endl;
             customer.close();
+
+            ofstream customer_master;
+            customer_master.open("C:\\banking_app\\Accounts_master\\accounts.txt",ios_base::app);
+            customer_master << id << " ";
+            customer_master << first_name << " ";
+            customer_master << middle_initial<< " ";
+            customer_master << last_name << " ";
+            customer_master << currency_code << " ";
+            customer_master << type << " ";
+            customer_master << balance << " ";
+            customer_master << "\n";
+            customer_master.close();
         }
         void closing_account(){
 
