@@ -39,7 +39,7 @@ class Accounts{
             ofstream customer;
             string abs_file_path = "C:\\banking_app\\Transaction\\" + filename + ".txt";
             customer.open(abs_file_path);
-            customer << "Opening Balance: " << balance << endl;
+            customer << "Opening Balance: $" << balance << endl;
             customer.close();
 
             ofstream customer_master;
@@ -55,13 +55,15 @@ class Accounts{
             customer_master.close();
         }
         void closing_account(){
-
+            balance = 0;
             auto filename = std::to_string(id);
             cout << "Enter account number: " << endl;
             cin >> filename;
             ofstream customer;
-            customer.open(filename.c_str(),ios_base::app);
-            customer << "Transaction: Closing";
+            string abs_file_path = "C:\\banking_app\\Transaction\\" + filename + ".txt";
+            customer.open(abs_file_path,ios_base::app);
+            customer << "Closing Balance: $" << balance << endl;
+            cout << "The following account " << filename << " is now closed!!!" << endl;
         }
         void list_accounts(){
         }
