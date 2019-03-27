@@ -3,6 +3,8 @@
 #include <chrono>
 #include <ctime>
 #include <string>
+#include <time.h>
+#include <iomanip>
 using namespace std;
 
 class start_of_day{
@@ -10,6 +12,79 @@ class start_of_day{
 };
 class inventory_management{
     public:
+        void list_all_items(){
+            string line;
+            ifstream filename ("inventory.txt");
+            if (filename.is_open()){
+                while (getline (filename,line)){
+                    cout << line << endl;
+                }
+                filename.close();
+            }else cout << "Unable to open systemlog.txt!!!";
+            cout << endl;
+            cout << endl;
+            cout << "Press Enter to return back to Inventory Management Menu!!!" << endl;
+        }
+        void add_an_item(){
+            int id;
+            string product;
+            int quantity;
+            double price, tax,tax_rate=0.165;
+            char taxable;
+
+            srand(time(0));
+            id = rand();
+            cout << "Item ID: " << id << endl;
+            cout << "Enter Product Name: " << endl;
+            cin >> product;
+            cout << "Enter Quantity of Product: " << endl;
+            cin >> quantity;
+            cout << "Is Item Taxable [T/NT]: " << endl;
+            cin >> taxable;
+            cout << "Enter cost per item: $" << endl;
+            cin >> price;
+            if(taxable=='T'){
+                tax=price*tax_rate;
+                cout << tax << endl;
+                price=price+tax;
+                cout << std::setprecision(2) << price << endl;
+            }else{
+                price=price;
+            }
+            cout << endl;
+            cout << endl;
+            cout << "Press Enter to return back to Inventory Management Menu!!!" << endl;
+
+            string filename = "inventory.txt";
+            ofstream inventorylog;
+            inventorylog.open(filename, ios_base::app);
+            inventorylog << id << " ";
+            inventorylog << product << " ";
+            inventorylog << quantity << " ";
+            inventorylog << taxable << " ";
+            inventorylog << price << " ";
+            inventorylog << "\n";
+            inventorylog.close();
+        }
+        void remove_item(){
+            string deleteline,line;
+            cout << "Which item do you want to remove? ";
+            cin >> deleteline;
+            ifstream file;
+            ofstream temp_file;
+            file.open("inventory.txt");
+            temp_file.open("temp.txt");
+            while (getline(file,line)){
+                    if(line!=deleteline)
+                    //line.replace(line.find(deleteline),deleteline.length(),"");
+                        temp_file<<line<<endl;
+            }
+            temp_file.close();
+            file.close();
+
+            remove("inventory.txt");
+            rename("temp.txt","inventory.txt");
+            }
 };
 class sales_management{
     public:
@@ -66,6 +141,7 @@ int main(){
     int option;
     do{
         main_menu:
+        {
         system("cls");
         cout<<"\n\n\n\tIrie Call Center Operations Limited";
         cout<<"\n\n\n\tOrder Management System";
@@ -78,6 +154,7 @@ int main(){
 		cout<<"\n\n\tPlease Select An Option From The Menu(1-5): ";
         cin >> option;
         system("cls");
+        }
         switch(option)
         {
             case 1:
@@ -97,12 +174,19 @@ int main(){
                         switch(option)
                         {
                             case 1:
+                                inventory_management viewinvObject;
+                                viewinvObject.list_all_items();
                                 break;
                             case 2:
+                                inventory_management addinvObject;
+                                addinvObject.add_an_item();
                                 break;
                             case 3:
+                                inventory_management removeObject;
+                                removeObject.remove_item();
                                 break;
                             case 4:
+                                goto main_menu;
                                 break;
                             default:cout<<"\a";
                         }
@@ -131,6 +215,7 @@ int main(){
                             case 3:
                                 break;
                             case 4:
+                                goto main_menu;
                                 break;
                             default:cout <<"\a";
                         }
