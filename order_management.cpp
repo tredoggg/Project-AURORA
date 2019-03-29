@@ -235,6 +235,7 @@ class sales_management{
         string product;
         float price, total_cost;
         char choice;
+        int term=0;
 
         WaitingQueue customer(10);
         customer.enqueue(1);
@@ -262,30 +263,40 @@ class sales_management{
             }else cout << "Unable to open systemlog.txt!!!";
         srand(time(0));
         id = rand();
+        cout << "\n" << endl;
         cout << "Please enter the ID of Product: " << endl;
         cin >> id_prod;
         cout << "Please enter the ID of Sales Represent: " << endl;
         cin >> id_rep;
-        string filename = std::to_string(id);
+        string xfilename = std::to_string(id);
         ofstream receipts;
-        string abs_file_path = "C:\\C++\\receipts\\" + filename + ".txt";
+        string abs_file_path = "C:\\C++\\receipts\\" + xfilename + ".txt";
         receipts.open(abs_file_path);
         do{
-            receipts << product << "" ;
-            receipts << price << "" ;
-            receipts << total_cost << "" ;
-            auto system_start = chrono::system_clock::now();
-            auto system_end = chrono::system_clock::now();
-            std::chrono::duration<double> elapse_second=system_end-system_start;
-            std::time_t end_time = std::chrono::system_clock::to_time_t(system_end);
-            string filename = "systemlog.txt";
-            ofstream systemlog;
-            systemlog.open(filename, ios_base::app);
-            systemlog << "Items added to receipt: " <<ctime(&end_time);
-            systemlog.close();
-        }while(!choice='q');{
+        cout << "Enter product name: " << endl;
+        cin >> product;
+        cout << "Enter price for the product: " << endl;
+        cin >> price;
+        cout << "Enter total cost for product: " << endl;
+        cin>> total_cost;
+        cout << "\n";
+        cout << "Enter 0 to Continue or 1 to Quite" << endl;
+        cin >> term;
+        receipts << product << " " ;
+        receipts << price << " " ;
+        receipts << total_cost << " " ;
+        auto system_start = chrono::system_clock::now();
+        auto system_end = chrono::system_clock::now();
+        std::chrono::duration<double> elapse_second=system_end-system_start;
+        std::time_t end_time = std::chrono::system_clock::to_time_t(system_end);
+        string filename = "systemlog.txt";
+        ofstream systemlog;
+        systemlog.open(filename, ios_base::app);
+        systemlog << "Items added to receipt: " <<ctime(&end_time);
+        systemlog.close();
+        }while(term!=1);
         receipts.close();
-        }
+
     }
     void print_receipt(){
     }
@@ -304,6 +315,8 @@ class view_system_log{
                 }
                 filename.close();
             }else cout << "Unable to open systemlog.txt!!!";
+            cout << endl;
+            cout << "Press Enter to return back to main menu!!!" << endl;
         }
 };
 class exit_application{
