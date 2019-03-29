@@ -45,7 +45,7 @@ void WaitingQueue::dequeue()
         exit(EXIT_FAILURE);
     }
 
-    cout << "Removing" << arr[front] << '\n';
+    cout << "Removing: " << arr[front] << '\n';
 
     front = (front + 1) % capacity;
     count--;
@@ -58,7 +58,7 @@ void WaitingQueue::enqueue(int item)
         exit(EXIT_FAILURE);
     }
 
-    cout << "Inserting" << item << '\n';
+    cout << "Inserting: " << item << '\n';
 
     rear = (rear + 1) % capacity;
     arr[rear] = item;
@@ -230,6 +230,68 @@ class sales_management{
         saleslog.close();
 
     }
+    void create_receipt(){
+        int id_rep,id_prod, id;
+        string product;
+        float price, total_cost;
+        char choice;
+
+        WaitingQueue customer(10);
+        customer.enqueue(1);
+        cout << "\n\n";
+        cout << "Current Inventory Stock: " << endl;
+        cout << "\n";
+        string iline;
+        ifstream ifilename ("inventory.txt");
+        if (ifilename.is_open()){
+            while (getline (ifilename,iline)){
+                cout << iline << endl;
+            }
+                ifilename.close();
+            }else cout << "Unable to open systemlog.txt!!!";
+        cout << "\n\n";
+        cout << "Current Sales Representatives: " << endl;
+        cout << "\n";
+        string sline;
+        ifstream sfilename ("salesreps.txt");
+        if (sfilename.is_open()){
+            while (getline (sfilename,sline)){
+                cout << sline << endl;
+            }
+                sfilename.close();
+            }else cout << "Unable to open systemlog.txt!!!";
+        srand(time(0));
+        id = rand();
+        cout << "Please enter the ID of Product: " << endl;
+        cin >> id_prod;
+        cout << "Please enter the ID of Sales Represent: " << endl;
+        cin >> id_rep;
+        string filename = std::to_string(id);
+        ofstream receipts;
+        string abs_file_path = "C:\\C++\\receipts\\" + filename + ".txt";
+        receipts.open(abs_file_path);
+        do{
+            receipts << product << "" ;
+            receipts << price << "" ;
+            receipts << total_cost << "" ;
+            auto system_start = chrono::system_clock::now();
+            auto system_end = chrono::system_clock::now();
+            std::chrono::duration<double> elapse_second=system_end-system_start;
+            std::time_t end_time = std::chrono::system_clock::to_time_t(system_end);
+            string filename = "systemlog.txt";
+            ofstream systemlog;
+            systemlog.open(filename, ios_base::app);
+            systemlog << "Items added to receipt: " <<ctime(&end_time);
+            systemlog.close();
+        }while(!choice='q');{
+        receipts.close();
+        }
+    }
+    void print_receipt(){
+    }
+    void show_all_sales(){
+    }
+
 };
 class view_system_log{
     public:
@@ -355,6 +417,8 @@ int main(){
                                 createrepObject.create_sales_rep();
                                 break;
                             case 2:
+                                sales_management receiptObject;
+                                receiptObject.create_receipt();
                                 break;
                             case 3:
                                 break;
