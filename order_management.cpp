@@ -167,8 +167,7 @@ class inventory_management{
             temp_file.open("temp.txt");
             while (getline(file,line)){
                     if(line!=deleteline)
-                    //line.replace(line.find(deleteline),deleteline.length(),"");
-                        temp_file<<line<<endl;
+                    temp_file<<line<<endl;
             }
             temp_file.close();
             file.close();
