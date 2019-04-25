@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <iomanip>
+#include <dirent.h>
 using namespace std;
 
 #define SIZE 10
@@ -119,8 +120,9 @@ class inventory_management{
         void add_an_item(){
             int id;
             string product;
+            string status="Available";
             int quantity;
-            double price, tax,tax_rate=0.165;
+            float price, tax,tax_rate=0.165;
             char taxable[10];
 
             srand(time(0));
@@ -145,7 +147,6 @@ class inventory_management{
             cout << endl;
             cout << endl;
             cout << "Press Enter to return back to Inventory Management Menu!!!" << endl;
-
             string filename = "inventory.txt";
             ofstream inventorylog;
             inventorylog.open(filename, ios_base::app);
@@ -154,27 +155,56 @@ class inventory_management{
             inventorylog << quantity << " ";
             inventorylog << taxable << " ";
             inventorylog << price << " ";
+            inventorylog << status << " ";
             inventorylog << "\n";
             inventorylog.close();
         }
-        void remove_item(){
-            string deleteline,line;
-            cout << "Which item do you want to remove? ";
-            cin >> deleteline;
-            ifstream file;
-            ofstream temp_file;
-            file.open("inventory.txt");
-            temp_file.open("temp.txt");
-            while (getline(file,line)){
-                    if(line!=deleteline)
-                    temp_file<<line<<endl;
-            }
-            temp_file.close();
-            file.close();
+        /*Read the contents of the Inventory.txt*/
+        void get_inventory(){
+            string line;
+            ifstream filename ("inventory.txt");
+            if (filename.is_open()){
+                cout << "Items that are currently in Inventory: " << endl;
+                cout << "\n";
+                while (getline (filename,line)){
+                    cout << line << endl;
+                }
+                cout << "\n" ;
+                filename.close();
+            }else cout << "Unable to open systemlog.txt!!!";
+        }
 
-            remove("inventory.txt");
-            rename("temp.txt","inventory.txt");
+        void remove_item(){
+            int id,tempid;
+            string product;
+            int quantity;
+            string taxable;
+            float price;
+            string status;
+
+            cout << "Which item do you want to remove? ";
+            cin >> tempid;
+            ifstream file("inventory.txt");
+            while(file >> id >> product >> quantity >> taxable >> price >> status){
+                if (tempid==id){
+                    cout << "Product ID Match!!!";
+                }else{
+                    cout << "Product ID Not Found!!!";
+                }
             }
+            status = "Removed";
+            ofstream file_handler("inventory.txt",ios_base::app);
+            file_handler << id << " ";
+            file_handler << product << " ";
+            file_handler << quantity << " ";
+            file_handler << taxable <<" ";
+            file_handler << price <<" ";
+            file_handler << status <<" ";
+            file_handler << "\n";
+            file_handler.close();
+            file.close();
+            }
+
 };
 class sales_management{
     public:
@@ -228,6 +258,44 @@ class sales_management{
         saleslog << "\n";
         saleslog.close();
 
+    }
+    void display_receipts (){
+        string line;
+        string file_name;
+        cout << "\n";
+        cout << "Please enter the name of the receipt you wish to view: " << endl;
+        cin >> file_name;
+        string abs_file_path = "C:\\C++\\receipts\\" + file_name + ".txt";
+        ifstream ereceipt(abs_file_path);
+        if (ereceipt.is_open()){
+            cout << "\n";
+            cout << "Items that are currently on this receipt: " << endl;
+            cout << "\n";
+                while (getline (ereceipt,line)){
+                    cout << line << endl;
+                }
+                cout << "\n" ;
+                ereceipt.close();
+                cout << "Press enter to return back to Sales Management Menu!!!";
+            }else cout << "Unable to open systemlog.txt!!!";
+    }
+    void directory(){
+        struct dirent *de;  // Pointer for directory entry
+
+    // opendir() returns a pointer of DIR type.
+    DIR *dr = opendir("C:\\C++\\receipts\\");
+
+    if (dr == NULL)  // opendir returns NULL if couldn't open directory
+    {
+        printf("Could not open current directory" );
+    }
+
+    // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html
+    // for readdir()
+    while ((de = readdir(dr)) != NULL)
+            printf("%s\n", de->d_name);
+
+    closedir(dr);
     }
     void create_receipt(){
         int id_rep,id_prod, id;
@@ -284,6 +352,7 @@ class sales_management{
         receipts << product << " " ;
         receipts << price << " " ;
         receipts << total_cost << " " ;
+        receipts << "\n";
         auto system_start = chrono::system_clock::now();
         auto system_end = chrono::system_clock::now();
         std::chrono::duration<double> elapse_second=system_end-system_start;
@@ -344,6 +413,8 @@ class exit_application{
         }
 };
 
+
+
 int main(){
     int option;
     do{
@@ -396,6 +467,7 @@ int main(){
                                 break;
                             case 3:
                                 inventory_management removeObject;
+                                removeObject.get_inventory();
                                 removeObject.remove_item();
                                 break;
                             case 4:
@@ -433,6 +505,10 @@ int main(){
                                 receiptObject.create_receipt();
                                 break;
                             case 3:
+                                cout << "Current Receipts: " << endl;
+                                sales_management dirObject;
+                                dirObject.directory();
+                                dirObject.display_receipts();
                                 break;
                             case 4:
                                 break;
