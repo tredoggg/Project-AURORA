@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+class Queue{
+    private:
+        int _shoppers[10];
+        int _quota;
+        int _begin;
+        int _end;
+
+        public:
+          Queue() {
+              _quota = 10;
+              _begin = -1;
+              _end = -1;
+            }
+
+          void enqueue(int value){
+
+
+              if (is_full()){
+                  cout << "Queue full. Unable to add " << value << " to the queue.";
+              }else{
+                  if (_begin == -1){
+                      _begin = 0;
+                  }
+                  _end++;
+                  _shoppers[_end] = value;
+              }
+        }
+
+        void dequeue(){
+            if(is_empty() || _begin > _end ){
+                cout << "Queue is empty. Nothing to remove";
+            }else{
+                cout << _shoppers[_begin] << " was removed from the queue." <<endl;
+                _end++;
+            }
+        }
+
+        int get_quota(){ return _quota; }
+
+        int get_begin(){ return _begin; }
+
+        bool is_empty(){
+            if(_begin == -1){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        bool is_full(){
+            if(_end == _quota - 1 ){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        void display(){
+            for(int i = _begin; i <= _end; i++){
+                cout << _shoppers[i]<<endl;
+            }
+        }
+
+};
